@@ -27,39 +27,49 @@ class KMeans:
         self.distortion = 0
         for ii in range(self.k):
             self.centroids[ii] = np.mean(self.data[self.assign_mask == ii], axis = 0)
-            self.distortion += np.sum(np.sum(np.abs(self.data[self.assign_mask == i] - self.centroids[ii])))
+            self.distortion += np.sum(np.sum(np.abs(self.data[self.assign_mask == ii] - self.centroids[ii])))
 
 
     # Step 3. assign samples to the closest centroids
     # Step 4. update the centroids with the means of the 
     # repeat to step 2, 3 and 4.
 
-    def fit(self, max_iter = 10):
+    def fit(self, max_iter = 20):
         counter = 0
         while counter < max_iter:
             self.dist_calculate_cent_update()
-            self.kmeans_plot()
+            # self.kmeans_plot()
             counter += 1
 
     def kmeans_plot(self):
-        fig, ax = plt.subplots()
-        pts_sc = ax.scatter(self.data[:, 0], self.data[:, 1], c = self.assign_mask, cmap = 'ocean')
+        fig, ax = plt.subplots(figsize = (7,7))
+        pts_sc = ax.scatter(self.data[:, 0], self.data[:, 1], c = self.assign_mask, cmap = 'viridis')
         cent_sc = ax.scatter(self.centroids[:, 0], self.centroids[:, 1], marker = 'x', s = 42, color = 'r')
+        ax.set_xlabel('Feature-1')
+        ax.set_ylabel('Feature-2')
+        ax.set_title(f'K-means Clustering results (k = {self.k})')
+        
         plt.show()
 
 
-    # def elbow(self, max_k = 10):
-    #     self.k_list = [None] * max_k
-    #     for ii in range(max_k):
-    #         self.initialize(k  = ii)
-    #         self.fit(max_iter = 20)
-    #         self.k_list[ii] = self.distortion
+    def elbow(self, max_k = 15):
+        self.k_list = [None] * (max_k - 2)
+        for ii in range(2, max_k):
+            self.initialize(k  = ii)
+            self.fit(max_iter = 20)
+            # print(self.distortion)
+            # print(ii)
+            self.k_list[ii - 2] = self.distortion
 
 
-    # def elbow_plot(self):
-    #     fig, ax = plt.subplot()
-    #     x = [i for i in range(len(self.distortion))]
-    #     ax.plots(x, k_list)
+    def elbow_plot(self):
+        fig, ax = plt.subplots(figsize = (7,7))
+        x = [i  + 2 for i in range(len(self.k_list))]
+        ax.plot(x, self.k_list, 'o-')
+        ax.set_title('Elbow method to pick k, the number of clusters')
+        ax.set_xlabel('k (number of clusters)')
+        ax.set_ylabel('Distortions')
+        plt.show()
 
 
 
