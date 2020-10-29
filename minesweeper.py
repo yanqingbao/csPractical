@@ -150,6 +150,9 @@ class game(board):
             for jj in range(c_0, c_1 + 1):
                 if self.dis_map.cur[ii][jj] == ' ' and self.mine_map.cur[ii][jj] == '0':
                     self.reveal_nearby_zeros(ii, jj)
+                elif self.dis_map.cur[ii][jj] == ' ' and self.mine_map.cur[ii][jj] != '0':
+                    self.dis_map.cur[ii][jj] = self.mine_map.cur[ii][jj]
+                    self.num_revealed += 1
         
 
     def get_r_c(self, rcString): # letter for col and number for row
