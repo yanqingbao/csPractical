@@ -14,6 +14,8 @@ class board:
             n_grid = 9
         self.n_grid = n_grid
         self.cur = [[' ' for _ in range(self.n_grid)] for _ in range(self.n_grid)]
+        # self.generate_alphabetanumbers(n_grid)
+        # print(words)
 
 
 
@@ -24,6 +26,7 @@ class board:
             if i == 0:
                 res += ' ' * 6
                 res += '   '.join(words[:self.n_grid])
+                # res += '   '.join(self.letter_labels)
                 res += ' ' * 2
                 res += '\n'
                 continue
@@ -32,6 +35,22 @@ class board:
                 continue
             res += str(i//2) + ' '*(4-len(str(i//2))) + '| ' + ' | '.join(self.cur[(i-1)//2]) + ' |\n'
         return res
+
+
+
+    def generate_alphabetanumbers(self, n):
+        '''
+        0 -> a, 1->b, 26->aa
+        '''
+        output = ''
+        while n != 0:
+            if len(output) == 0:
+                output = string.ascii_lowercase[n%26] + output
+            else:
+                output = string.ascii_lowercase[n%26 - 1] + output
+            n = n // 26
+        
+        return output
 
 class game(board):
     def __init__(self, n_mines=None, n_grid=None):
@@ -225,7 +244,7 @@ class game(board):
 
 
 if __name__ == '__main__':
-    g = game(10, 9) # n_mines=15, n_grid=12
+    g = game(10, 30) # Note, so fart the printing cant handle over 26 gird, # n_mines=15, n_grid=12 
     g.play()
  
 
